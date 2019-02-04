@@ -15,7 +15,7 @@ pipeline {
         tag pattern: "v\\d+\\.\\d+\\.\\d+(-\\w+-\\d+)?", comparator: "REGEXP"
       }
       steps {
-        sh "go get github.com/FINTprosjektet/fint-model && go install github.com/FINTprosjektet/fint-model && fint-model --owner FINTlabs --repo vigo-kodeverk-modell --filename Vigo-kodeverkmodell.xml --tag v${TAG_NAME} generate"
+        sh "go get github.com/FINTprosjektet/fint-model && go install github.com/FINTprosjektet/fint-model && fint-model --owner FINTlabs --repo vigo-kodeverk-modell --filename Vigo-kodeverkmodell.xml --tag ${TAG_NAME} generate"
         stash(name: 'java', includes: 'java/**')
       }
     }

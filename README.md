@@ -7,4 +7,4 @@
 
 ## Features
 
-* Initial release, forked from [/FINTprosjektet/fint-informasjonsmodell](FINT).
+* Initial release, forked from https://github.com/FINTprosjektet/fint-informasjonsmodell

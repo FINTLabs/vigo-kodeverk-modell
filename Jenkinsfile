@@ -6,16 +6,13 @@ pipeline {
   stages {
     stage('Generate Model') {
       agent { 
-        docker {
-          label 'docker'
-          image 'golang'
-        }
-       }
+        label 'docker'
+      }
       when {
         tag pattern: "v\\d+\\.\\d+\\.\\d+(-\\w+-\\d+)?", comparator: "REGEXP"
       }
       steps {
-        sh "go get github.com/FINTprosjektet/fint-model && go install github.com/FINTprosjektet/fint-model && fint-model --owner FINTlabs --repo vigo-kodeverk-modell --filename Vigo-kodeverkmodell.xml --tag ${TAG_NAME} generate"
+        sh "docker run -i -v \$PWD:/src fint/fint-model:2.0.1 --owner FINTlabs --repo vigo-kodeverk-modell --filename Vigo-kodeverkmodell.xml --tag ${TAG_NAME} generate"
         stash(name: 'java', includes: 'java/**')
       }
     }
@@ -23,7 +20,7 @@ pipeline {
       agent { 
         docker {
           label 'docker'
-          image 'dtr.fintlabs.no/jenkins/git:latest'
+          image 'fint/git:latest'
         }
       }
       when {
@@ -39,7 +36,7 @@ pipeline {
         sh 'rm -rf src/main/java/no/fint/model/*'
         sh 'mv java/* src/main/java/no/fint/model/'
         sh "echo version=${VERSION} > gradle.properties"
-        sh 'git config user.email "jenkins@fintprosjektet.no"'
+        sh 'git config user.email "jenkins@fintlabs.no"'
         sh 'git config user.name "FINT Jenkins"'
         sh 'git add gradle.properties src/main/java/no/fint/model/'
         sh "git commit -m 'Version ${VERSION}'"
